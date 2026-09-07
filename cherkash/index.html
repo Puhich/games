@@ -4,6 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#000000">
 <title>ЧЕРКАШ</title>
 <style>
   html,body{margin:0;height:100%;width:100%;background:#000;overflow:hidden;position:fixed;inset:0;
@@ -24,8 +27,8 @@ const block=e=>{e.preventDefault();};
 const W=180,H=320;
 const cv=document.getElementById('c');cv.width=W;cv.height=H;
 const ctx=cv.getContext('2d',{alpha:false});
-function fit(){let s=Math.min(innerWidth/W,innerHeight/H);if(s>=1)s=Math.floor(s);cv.style.width=(W*s)+'px';cv.style.height=(H*s)+'px';}
-addEventListener('resize',fit);fit();
+function fit(){const vw=(window.visualViewport?visualViewport.width:innerWidth),vh=(window.visualViewport?visualViewport.height:innerHeight);const s=Math.min(vw/W,vh/H);cv.style.width=Math.floor(W*s)+'px';cv.style.height=Math.floor(H*s)+'px';}
+addEventListener('resize',fit);if(window.visualViewport)visualViewport.addEventListener('resize',fit);addEventListener('orientationchange',()=>setTimeout(fit,100));fit();
 const BAYER=[0,8,2,10,12,4,14,6,3,11,1,9,15,7,13,5];
 function mkPat(level){const c=document.createElement('canvas');c.width=4;c.height=4;const x=c.getContext('2d');
   x.fillStyle='#000';x.fillRect(0,0,4,4);x.fillStyle='#fff';
