@@ -11,12 +11,12 @@
 <style>
   html,body{margin:0;height:100%;width:100%;background:#000;overflow:hidden;position:fixed;inset:0;
     touch-action:none;overscroll-behavior:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
-  body{display:flex;align-items:center;justify-content:center}
+  #wrap{position:fixed;left:0;right:0;top:0;bottom:0;padding:max(env(safe-area-inset-top,0px),10px) 6px max(env(safe-area-inset-bottom,0px),22px) 6px;box-sizing:border-box;display:flex;align-items:center;justify-content:center}
   canvas{image-rendering:pixelated;image-rendering:crisp-edges;display:block;background:#000;touch-action:none}
 </style>
 </head>
 <body>
-<canvas id="c"></canvas>
+<div id="wrap"><canvas id="c"></canvas></div>
 <script>
 // ---- block swipes / pull-to-refresh / pinch ----
 const block=e=>{e.preventDefault();};
@@ -27,7 +27,10 @@ const block=e=>{e.preventDefault();};
 const W=180,H=320;
 const cv=document.getElementById('c');cv.width=W;cv.height=H;
 const ctx=cv.getContext('2d',{alpha:false});
-function fit(){const vw=(window.visualViewport?visualViewport.width:innerWidth),vh=(window.visualViewport?visualViewport.height:innerHeight);const s=Math.min(vw/W,vh/H);cv.style.width=Math.floor(W*s)+'px';cv.style.height=Math.floor(H*s)+'px';}
+function fit(){const wr=document.getElementById('wrap');const cs=getComputedStyle(wr);
+  const vw=(window.visualViewport?visualViewport.width:innerWidth)-parseFloat(cs.paddingLeft)-parseFloat(cs.paddingRight);
+  const vh=(window.visualViewport?visualViewport.height:innerHeight)-parseFloat(cs.paddingTop)-parseFloat(cs.paddingBottom);
+  const s=Math.min(vw/W,vh/H);cv.style.width=Math.floor(W*s)+'px';cv.style.height=Math.floor(H*s)+'px';}
 addEventListener('resize',fit);if(window.visualViewport)visualViewport.addEventListener('resize',fit);addEventListener('orientationchange',()=>setTimeout(fit,100));fit();
 const BAYER=[0,8,2,10,12,4,14,6,3,11,1,9,15,7,13,5];
 function mkPat(level){const c=document.createElement('canvas');c.width=4;c.height=4;const x=c.getContext('2d');
